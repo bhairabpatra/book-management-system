@@ -1,16 +1,15 @@
 package bookapp.user.controllers;
 
 
+import bookapp.user.exceptions.ErrorResponse;
+import bookapp.user.exceptions.SuccessResponse;
 import bookapp.user.exceptions.UserExist;
 import bookapp.user.models.User;
 import bookapp.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("v1/api/user")
@@ -20,26 +19,69 @@ public class UserControllers {
     private UserService userService;
 
     @PostMapping("signup")
-    public ResponseEntity<User> signUp(@RequestBody User user) {
+    public ResponseEntity<?> signUp(@RequestBody User user) {
         User newUser = userService.createUser(user);
-        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+        SuccessResponse successResponse = new SuccessResponse();
+        successResponse.setStatus(HttpStatus.CREATED.value());
+        successResponse.setMessage("User Created successfully");
+        successResponse.setUser(user);
+        return new ResponseEntity<>(successResponse, HttpStatus.CREATED);
     }
 
     @PostMapping("sign-in")
-    public ResponseEntity<String> signIn(@RequestBody User user) {
+    public ResponseEntity<?> signIn(@RequestBody User user) {
         if (userService.signInUser(user)) {
-            return new ResponseEntity<>("Welcome back! You've successfully logged in", HttpStatus.OK);
+            SuccessResponse successResponse = new SuccessResponse();
+            successResponse.setStatus(HttpStatus.OK.value());
+            successResponse.setMessage("Welcome back! You've successfully logged i");
+            return new ResponseEntity<>(successResponse, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Login failed", HttpStatus.BAD_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),"Login failed");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody User user) {
+    public ResponseEntity<?> resetPassword(@RequestBody User user) {
         if (userService.resetPassword(user)) {
-            return new ResponseEntity<>("Your password has been changed successfully", HttpStatus.OK);
+            SuccessResponse successResponse = new SuccessResponse();
+            successResponse.setStatus(HttpStatus.OK.value());
+            successResponse.setMessage("User updated successfully");
+            successResponse.setUser(user);
+            return new ResponseEntity<>(successResponse, HttpStatus.OK);
         } else {
-            throw new UserExist("The requested user was not found");
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(),"User updated failed");
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+
         }
     }
+
+    @PutMapping("edit/{id}")
+    public ResponseEntity<?> editUser(@PathVariable Long id, @RequestBody User user) {
+        if (userService.updateUser(id, user)) {
+            SuccessResponse successResponse = new SuccessResponse();
+            successResponse.setStatus(HttpStatus.OK.value());
+            successResponse.setMessage("User updated successfully");
+            successResponse.setUser(user);
+            return new ResponseEntity<>(successResponse, HttpStatus.OK);
+        } else {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),"User updated failed");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        if (userService.deleteUSer(id)) {
+            SuccessResponse successResponse = new SuccessResponse();
+            successResponse.setStatus(HttpStatus.OK.value());
+            successResponse.setMessage("User deleted Successfully");
+            return new ResponseEntity<>(successResponse, HttpStatus.OK);
+        } else {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),"User deleted failed");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 }

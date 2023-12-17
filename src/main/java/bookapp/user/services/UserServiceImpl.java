@@ -17,12 +17,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-       Optional<User> isExist = userRepo.findByEmail(user.getEmail());
-       if(isExist.isPresent()){
-           throw new UserExist("This  "  + user.getEmail() + "  email id already exists");
-       }else {
-           return userRepo.save(user);
-       }
+        Optional<User> isExist = userRepo.findByEmail(user.getEmail());
+        if (isExist.isPresent()) {
+            throw new UserExist("This  " + user.getEmail() + "  email id already exists");
+        } else {
+            return userRepo.save(user);
+        }
     }
 
     @Override
@@ -41,9 +41,32 @@ public class UserServiceImpl implements UserService {
     public Boolean resetPassword(User user) {
         Optional<User> checkUser = userRepo.findByEmail(user.getEmail());
         if (checkUser.isPresent()) {
-           checkUser.get().setPassword(user.getPassword());
-           userRepo.save(checkUser.get());
-           return true;
+            checkUser.get().setPassword(user.getPassword());
+            userRepo.save(checkUser.get());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean updateUser(Long id, User user) {
+        Optional<User> existUser = userRepo.findById(id);
+        if (existUser.isPresent()) {
+            existUser.get().setUsername(user.getUsername());
+            existUser.get().setAddress(user.getAddress());
+            existUser.get().setPhone(user.getPhone());
+            userRepo.save(existUser.get());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean deleteUSer(Long id) {
+        Optional<User> existUser = userRepo.findById(id);
+        if(existUser.isPresent()){
+            userRepo.deleteById(id);
+            return true;
         }
         return false;
     }
