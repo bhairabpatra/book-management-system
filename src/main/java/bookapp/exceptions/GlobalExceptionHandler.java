@@ -1,6 +1,7 @@
 package bookapp.exceptions;
 
 import bookapp.repositories.ErrorResponseEntity;
+import bookapp.user.exceptions.UserExist;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,5 +29,14 @@ public class GlobalExceptionHandler {
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setTimestamp(System.currentTimeMillis());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserExist.class)
+    public ResponseEntity<ErrorResponseEntity> handleUserExist(UserExist ex) {
+        ErrorResponseEntity errorResponse = new ErrorResponseEntity();
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setTimestamp(System.currentTimeMillis());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }
