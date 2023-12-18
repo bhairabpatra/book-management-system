@@ -13,4 +13,6 @@ public interface UserService {
     public Boolean updateUser(Long id, User user);
 
     public Boolean deleteUSer(Long id);
+
+    public User getUserByID(String email);
 }

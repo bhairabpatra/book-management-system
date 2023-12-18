@@ -44,10 +44,11 @@ public class BooksControllers {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Books> getBook(@PathVariable UUID id){
+    public ResponseEntity<Books> getBook(@PathVariable Long id){
         Books books = bookService.getBook(id);
         return new ResponseEntity<>(books,HttpStatus.OK);
     }
+
     @GetMapping("/author/{author}")
     public ResponseEntity<List<Books>> getPublisher(@PathVariable String author){
         List<Books> books = bookService.findByAuthor(author);

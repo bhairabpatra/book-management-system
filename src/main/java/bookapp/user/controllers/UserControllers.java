@@ -1,9 +1,6 @@
 package bookapp.user.controllers;
-
-
 import bookapp.user.exceptions.ErrorResponse;
 import bookapp.user.exceptions.SuccessResponse;
-import bookapp.user.exceptions.UserExist;
 import bookapp.user.models.User;
 import bookapp.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +79,5 @@ public class UserControllers {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
     }
-
 
 }

@@ -70,4 +70,14 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
+    @Override
+    public User getUserByID(String email) {
+        Optional<User> existUser = userRepo.findByEmail(email);
+        if(existUser.isPresent()){
+            System.out.println(existUser.get());
+            return existUser.get();
+        }
+        return null;
+    }
 }

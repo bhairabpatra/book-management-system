@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface BooksRepositories extends JpaRepository<Books , UUID> {
+public interface BooksRepositories extends JpaRepository<Books , Long> {
     List<Books> findByAuthor(String publisher);
 }
