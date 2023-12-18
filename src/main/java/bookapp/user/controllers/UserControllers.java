@@ -1,4 +1,5 @@
 package bookapp.user.controllers;
+
 import bookapp.user.exceptions.ErrorResponse;
 import bookapp.user.exceptions.SuccessResponse;
 import bookapp.user.models.User;
@@ -33,7 +34,7 @@ public class UserControllers {
             successResponse.setMessage("Welcome back! You've successfully logged i");
             return new ResponseEntity<>(successResponse, HttpStatus.OK);
         } else {
-            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),"Login failed");
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Login failed");
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
     }
@@ -47,7 +48,7 @@ public class UserControllers {
             successResponse.setUser(user);
             return new ResponseEntity<>(successResponse, HttpStatus.OK);
         } else {
-            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(),"User updated failed");
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "User updated failed");
             return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
 
         }
@@ -62,7 +63,7 @@ public class UserControllers {
             successResponse.setUser(user);
             return new ResponseEntity<>(successResponse, HttpStatus.OK);
         } else {
-            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),"User updated failed");
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "User updated failed");
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
     }
@@ -75,9 +76,14 @@ public class UserControllers {
             successResponse.setMessage("User deleted Successfully");
             return new ResponseEntity<>(successResponse, HttpStatus.OK);
         } else {
-            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),"User deleted failed");
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "User deleted failed");
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
     }
 
+    @GetMapping("getByEmail/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        User user = userService.getUserByEmail(email);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 }

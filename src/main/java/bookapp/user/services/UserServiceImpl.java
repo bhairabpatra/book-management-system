@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean deleteUSer(Long id) {
         Optional<User> existUser = userRepo.findById(id);
-        if(existUser.isPresent()){
+        if (existUser.isPresent()) {
             userRepo.deleteById(id);
             return true;
         }
@@ -72,12 +72,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByID(String email) {
+    public User getUserByEmail(String email) {
         Optional<User> existUser = userRepo.findByEmail(email);
-        if(existUser.isPresent()){
-            System.out.println(existUser.get());
-            return existUser.get();
-        }
-        return null;
+        return existUser.orElse(null);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        Optional<User> existUser = userRepo.findById(id);
+        return existUser.orElse(null);
     }
 }
