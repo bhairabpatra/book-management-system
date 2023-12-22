@@ -7,14 +7,21 @@ import bookapp.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
 
-@RestController
-@RequestMapping("v1/api/user")
+import java.util.List;
+
+
+@Controller
+
+@CrossOrigin("*")
 public class UserControllers {
 
     @Autowired
     private UserService userService;
+
 
     @PostMapping("signup")
     public ResponseEntity<?> signUp(@RequestBody User user) {
@@ -26,12 +33,12 @@ public class UserControllers {
         return new ResponseEntity<>(successResponse, HttpStatus.CREATED);
     }
 
-    @PostMapping("sign-in")
+    @PostMapping("login")
     public ResponseEntity<?> signIn(@RequestBody User user) {
         if (userService.signInUser(user)) {
             SuccessResponse successResponse = new SuccessResponse();
             successResponse.setStatus(HttpStatus.OK.value());
-            successResponse.setMessage("Welcome back! You've successfully logged i");
+            successResponse.setMessage("Welcome back! You've successfully logged in");
             return new ResponseEntity<>(successResponse, HttpStatus.OK);
         } else {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Login failed");
@@ -68,6 +75,7 @@ public class UserControllers {
         }
     }
 
+
     @DeleteMapping("delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         if (userService.deleteUSer(id)) {
@@ -85,5 +93,27 @@ public class UserControllers {
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         User user = userService.getUserByEmail(email);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/get-users")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<User>> getUsers() {
+        List<User> user = userService.getUsers();
+        if (user != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
+    }
+
+    @GetMapping("/welcome")
+    public String greeting() {
+        return "welcome";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 }

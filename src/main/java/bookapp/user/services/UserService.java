@@ -2,6 +2,8 @@ package bookapp.user.services;
 
 import bookapp.user.models.User;
 
+import java.util.List;
+
 public interface UserService {
 
     public User createUser(User user);
@@ -16,4 +18,6 @@ public interface UserService {
 
     public User getUserByEmail(String email);
     public  User getUserById(Long id);
+
+    public List<User> getUsers();
 }
